@@ -1,5 +1,5 @@
 ## c-synth ∿
-Work in progress synthesiser in c. Right now just makes a raw saw wave.
+Work in progress synthesiser in c. Right now just makes a raw sine wave.
 
 ## Todo
 - Implement all primitive waveforms (sin, saw, square).
