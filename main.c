@@ -2,44 +2,37 @@
 #include <math.h>
 #include "include/portaudio.h"
 
+// Synth defines.
+#include "wavetables.h"
+#include "osc.h"
+
 #define SAMPLE_RATE (44100)
 
-typedef struct {
-    float left_phase;
-    float right_phase;
-} saw_osc;
+static int pa_callback( const void *input, void *output, unsigned long frameCount,
+                     const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData );
 
-/****Function called when audio buffer needs more data****/
-static int PaCallback( const void *input, void *output, unsigned long frameCount,
-                     const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData ) {
-    saw_osc *data = (saw_osc*)userData;
-    float *out = (float*)output;
+int main(void){
+    float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE);
+    osc *sin_osc = create_new_osc(sin_table, 60.0);
 
-    unsigned int i;
-    for (i=0; i < frameCount; i++){
-        *out++ = data->left_phase;
-        *out++ = data->left_phase;
+    PaStream *stream;
 
-        data->left_phase += 0.01f;
-        data->right_phase += 0.01f;
+    Pa_Initialize();
+    Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, SAMPLE_RATE, 256, pa_callback, sin_osc);
+    Pa_StartStream( stream );
 
-        if( data->left_phase >= 1.0f ) data->left_phase -= 2.0f;
-        if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
-    }
+    Pa_Sleep(20*1000);
+    Pa_StopStream( stream );
+    Pa_CloseStream( stream );
+
     return 0;
 }
 
-int main(void){
-    saw_osc saw;
-    PaStream *stream;
+/****Function called when audio buffer needs more data****/
+static int pa_callback( const void *input, void *output, unsigned long frameCount,
+                     const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData ) {
 
-    saw.left_phase = saw.right_phase = 0.0;
+    render_osc(output, userData, frameCount, SAMPLE_RATE);
 
-    Pa_Initialize();
-    Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, SAMPLE_RATE, 256, PaCallback, &saw);
-    Pa_StartStream( stream );
-
-    Pa_Sleep(2*1000);
-    Pa_StopStream( stream );
-    Pa_CloseStream( stream );
+    return 0;
 }

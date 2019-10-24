@@ -6,3 +6,17 @@
 
 1477794184 c:\users\jordan\desktop\test\portaudiotest\include\portaudio.h
 
+1571896603 source:c:\users\jordan\desktop\test\portaudiotest\osc.c
+	"osc.h"
+
+1571896478 c:\users\jordan\desktop\test\portaudiotest\osc.h
+	<malloc.h>
+
+1571895133 source:c:\users\jordan\desktop\test\portaudiotest\wavetables.c
+	"wavetables.h"
+	<stdio.h>
+
+1571893282 c:\users\jordan\desktop\test\portaudiotest\wavetables.h
+	<math.h>
+	<malloc.h>
+
