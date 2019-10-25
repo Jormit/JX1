@@ -7,6 +7,6 @@ Synthesiser written in c. Right now is able to create primitive wave forms with 
 - Distortion.
 - Key frequency calculations.
 - Delay / reverb.
-- Nice terminal ui.
+- adsr envelope.
 - Presets.
 - Play using keyboard/midi.
