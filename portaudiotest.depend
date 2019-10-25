@@ -1,8 +1,10 @@
 # depslib dependency file v1.0
-1571829889 source:c:\users\jordan\desktop\test\portaudiotest\main.c
+1572005075 source:c:\users\jordan\desktop\test\portaudiotest\main.c
 	<stdio.h>
 	<math.h>
 	"include/portaudio.h"
+	"wavetables.h"
+	"osc.h"
 
 1477794184 c:\users\jordan\desktop\test\portaudiotest\include\portaudio.h
 
@@ -12,11 +14,11 @@
 1571896478 c:\users\jordan\desktop\test\portaudiotest\osc.h
 	<malloc.h>
 
-1571895133 source:c:\users\jordan\desktop\test\portaudiotest\wavetables.c
+1572005239 source:c:\users\jordan\desktop\test\portaudiotest\wavetables.c
 	"wavetables.h"
 	<stdio.h>
 
-1571893282 c:\users\jordan\desktop\test\portaudiotest\wavetables.h
+1572003816 c:\users\jordan\desktop\test\portaudiotest\wavetables.h
 	<math.h>
 	<malloc.h>
 

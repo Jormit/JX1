@@ -12,13 +12,19 @@ static int pa_callback( const void *input, void *output, unsigned long frameCoun
                      const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData );
 
 int main(void){
-    float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE);
-    osc *sin_osc = create_new_osc(sin_table, 60.0);
+    /* float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE, 0);
+    osc *sin_osc = create_new_osc(sin_table, 300.0, 0); */
+
+    /* float *square_table = create_wavetable(TYPE_SQUARE, SAMPLE_RATE, 0);
+    osc *sqr_osc = create_new_osc(square_table, 300.0, 0); */
+
+    float *saw_table = create_wavetable(TYPE_SAW, SAMPLE_RATE, 64);
+    osc *saw_osc = create_new_osc(saw_table, 261.6);
 
     PaStream *stream;
 
     Pa_Initialize();
-    Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, SAMPLE_RATE, 256, pa_callback, sin_osc);
+    Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, SAMPLE_RATE, 256, pa_callback, saw_osc);
     Pa_StartStream( stream );
 
     Pa_Sleep(20*1000);
@@ -28,7 +34,7 @@ int main(void){
     return 0;
 }
 
-/****Function called when audio buffer needs more data****/
+/** Function called when audio buffer needs more data **/
 static int pa_callback( const void *input, void *output, unsigned long frameCount,
                      const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData ) {
 

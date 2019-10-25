@@ -8,6 +8,6 @@
 #define TYPE_SQUARE 2
 #define TYPE_SAW    3
 // This function will return a wavetable of the specified type.
-float *create_wavetable(int type, int sample_rate);
+float *create_wavetable(int type, int sample_rate, int harmonics);
 
 #endif // WAVETABLES_H_INCLUDED
