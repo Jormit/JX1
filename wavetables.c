@@ -19,7 +19,8 @@ float *create_wavetable(int type, int sample_rate, int harmonics){
         int i, harmonic_count;
         for (i = 0; i < sample_rate; i++){
             for (harmonic_count = 1; harmonic_count <= harmonics; harmonic_count++){
-                new_table[i] += (2/M_PI) * (1.0 / (float)harmonic_count) * sin((2.0 * M_PI * i * harmonic_count)/(float)sample_rate);
+                new_table[i] += (2/M_PI) * (1.0 / (float)harmonic_count) *
+                sin((2.0 * M_PI * i * harmonic_count)/(float)sample_rate);
             }
         }
         return new_table;
@@ -31,7 +32,8 @@ float *create_wavetable(int type, int sample_rate, int harmonics){
         int i, harmonic_count;
         for (i = 0; i < sample_rate; i++){
             for (harmonic_count = 1; harmonic_count <= harmonics; harmonic_count+=2){
-                new_table[i] += (4/M_PI) * (1.0 / (float)harmonic_count) * sin((2.0 * M_PI * i * harmonic_count)/(float)sample_rate);
+                new_table[i] += (4/M_PI) * (1.0 / (float)harmonic_count) *
+                sin((2.0 * M_PI * i * harmonic_count)/(float)sample_rate);
             }
         }
         return new_table;

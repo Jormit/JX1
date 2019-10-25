@@ -13,13 +13,13 @@ static int pa_callback( const void *input, void *output, unsigned long frameCoun
 
 int main(void){
     /* float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE, 0);
-    osc *sin_osc = create_new_osc(sin_table, 300.0, 0); */
+    osc *sin_osc = create_new_osc(sin_table); */
 
     /* float *square_table = create_wavetable(TYPE_SQUARE, SAMPLE_RATE, 0);
-    osc *sqr_osc = create_new_osc(square_table, 300.0, 0); */
+    osc *sqr_osc = create_new_osc(square_table); */
 
     float *saw_table = create_wavetable(TYPE_SAW, SAMPLE_RATE, 64);
-    osc *saw_osc = create_new_osc(saw_table, 261.6);
+    osc *saw_osc = create_new_osc(saw_table);
 
     PaStream *stream;
 
@@ -38,7 +38,7 @@ int main(void){
 static int pa_callback( const void *input, void *output, unsigned long frameCount,
                      const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData ) {
 
-    render_osc(output, userData, frameCount, SAMPLE_RATE);
+    render_osc(output, userData, frameCount, SAMPLE_RATE, 261.6);
 
     return 0;
 }
