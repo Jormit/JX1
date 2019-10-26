@@ -1,12 +1,11 @@
 ## JX1
-Synthesiser written in c. Right now is able to create primitive wave forms with band limiting to avoid aliasing problems. Audio is output using the portaudio library.
+Synthesiser written in c. 
 
 ## Todo
-- Mix oscillators.
-- Filters.
-- Distortion.
-- Key frequency calculations.
-- Delay / reverb.
+- Play using keyboard.
+- Distortion effect.
 - adsr envelope.
+- Filters.
+- Delay / reverb.
 - Presets.
-- Play using keyboard/midi.
+
