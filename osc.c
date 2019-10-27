@@ -37,7 +37,10 @@ void add_osc(float *buffer, osc *osc, unsigned long frameCount, int sample_rate,
     }
 }
 
-void mix_osc(float *buffer, osc *osc1, osc *osc2, unsigned long frameCount, int sample_rate, float freq) {
-    render_osc(buffer, osc1, frameCount, sample_rate, freq);
-    render_osc(buffer, osc2, frameCount, sample_rate, freq);
+void clear_osc(float *buffer, unsigned long frameCount) {
+    int i;
+    for (i=0; i < frameCount; i++){
+        *buffer++ = 0.0;
+        *buffer++ = 0.0;
+    }
 }
