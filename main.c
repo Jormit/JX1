@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <malloc.h>
 #include "include/portaudio.h"
 
 // Synth defines.
 #include "wavetables.h"
-
 #include "osc.h"
 
 #define SAMPLE_RATE (44100)
@@ -33,8 +33,12 @@ int main(void){
     float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE, 64);
 
     // Initiate oscilators.
-    osc *osc1 = create_new_osc(sqr_table, 0.125);
-    osc *osc2 = create_new_osc(saw_table, 0.125);
+    osc *osc1 = create_new_osc(saw_table, 0.125);
+    osc *osc2 = create_new_osc(sqr_table, 0.125);
+
+    // Create_envelope (release doesn't really do anything atm).
+    osc1->envelope = create_envelope(0.05, 0.2, 0.5, 0.3, SAMPLE_RATE);
+    osc2->envelope = create_envelope(0.05, 0.2, 0.5, 0.3, SAMPLE_RATE);
 
     // Pack oscilators for transfer to callback function.
     osc_pack *oscillators = malloc(sizeof(osc_pack));
@@ -71,13 +75,13 @@ int main(void){
 static int pa_callback( const void *input, void *output, unsigned long frameCount,
                      const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData ) {
 
-    osc_pack *oscillators = (osc_pack*)userData;
+    osc_pack *data = (osc_pack*)userData;
 
     clear_osc(output, frameCount);
 
-    if (oscillators->notes->note1.code) {
-        add_osc(output, oscillators->osc1, frameCount, SAMPLE_RATE, oscillators->notes->note1.freq);
-        add_osc(output, oscillators->osc2, frameCount, SAMPLE_RATE, oscillators->notes->note1.freq);
+    if (data->notes->note1.code) {
+        add_osc(output, data->osc1, frameCount, SAMPLE_RATE, data->notes->note1.freq/2, &data->notes->note1);
+        add_osc(output, data->osc2, frameCount, SAMPLE_RATE, data->notes->note1.freq/4, &data->notes->note1);
     }
     /**
     if (oscillators->notes->note2.code) {
