@@ -1,7 +1,7 @@
 #include "osc.h"
 #include <math.h>
 
-// Given a keycode this returns note.
+/** Converts keycode into a note value. **/
 char Key2Note(KEY_EVENT_RECORD ker) {
     char note = 0;
     switch(ker.wVirtualKeyCode){
@@ -46,6 +46,7 @@ char Key2Note(KEY_EVENT_RECORD ker) {
     return note;
 }
 
+/** Creates a clean notes struct **/
 VOID initialize_keys(notes_pressed *notes){
     notes->note1.code = 0;
     notes->note2.code = 0;
@@ -63,7 +64,7 @@ VOID initialize_keys(notes_pressed *notes){
     notes->note3.time = 0.0;
 }
 
-// Given a key event this will set the current notes accordingly.
+/** Given a key event this will set the current notes accordingly. **/
 VOID KeyEventProc(KEY_EVENT_RECORD ker, notes_pressed *notes) {
     char note = Key2Note(ker);
 

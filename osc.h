@@ -38,8 +38,7 @@ VOID KeyEventProc(KEY_EVENT_RECORD ker, notes_pressed *notes);
 VOID initialize_keys(notes_pressed *notes);
 
 typedef struct {
-    float left_phase;
-    float right_phase;
+    float phase;
     envelope *envelope;
     float *wavetable;
     float mix;

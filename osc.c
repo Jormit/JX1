@@ -3,8 +3,7 @@
 
 osc *create_new_osc(float *wavetable, float mix) {
     osc *new_osc = malloc(sizeof(osc));
-    new_osc->left_phase = 0;
-    new_osc->right_phase = 0;
+    new_osc->phase = 0;
     new_osc->wavetable = wavetable;
     new_osc->mix = mix;
     return new_osc;
@@ -20,21 +19,16 @@ void add_osc(float *buffer, osc *osc, unsigned long frameCount, int sample_rate,
             env_amp = osc->envelope->envelope_table[(int)(current_note->time * sample_rate)];
         }
 
-        *buffer++ += env_amp * osc->mix * osc->wavetable[(int)(osc->left_phase * sample_rate)];
-        *buffer++ += env_amp * osc->mix * osc->wavetable[(int)(osc->right_phase * sample_rate)];
+        *buffer++ += 0.5 * env_amp * osc->mix * osc->wavetable[(int)(osc->phase * sample_rate)];
+        osc->phase += ( freq / sample_rate);
+        if( osc->phase >= 1.0f ) osc->phase = 0.0f;
 
-        osc->left_phase += ( freq / sample_rate);
-        osc->right_phase += ( freq / sample_rate);
-
-        if( osc->left_phase >= 1.0f ) osc->left_phase = 0.0f;
-        if( osc->right_phase >= 1.0f ) osc->right_phase = 0.0f;
     }
 }
 
 void clear_osc(float *buffer, unsigned long frameCount) {
     int i;
     for (i=0; i < frameCount; i++){
-        *buffer++ = 0.0;
         *buffer++ = 0.0;
     }
 }

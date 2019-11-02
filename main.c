@@ -4,12 +4,14 @@
 #include <malloc.h>
 #include "include/portaudio.h"
 
-// Synth defines.
+// User synth defines.
 #include "wavetables.h"
 #include "osc.h"
+#include "filters.h"
 
 #define SAMPLE_RATE (44100)
 
+// Define of the audio callback function.
 static int pa_callback( const void *input, void *output, unsigned long frameCount,
                      const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData );
 
@@ -17,28 +19,40 @@ static int pa_callback( const void *input, void *output, unsigned long frameCoun
 HANDLE hStdin;
 DWORD fdwSaveOldMode;
 
+// These are needed to allow filter to work continously to remove artefacts.
+float last_in[2];
+float last_out[2];
+
 int main(void){
     // Initialize keypress api.
     DWORD cNumRead, i;
     INPUT_RECORD irInBuf[128];
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
 
+    last_in[0] = 0.0;
+    last_in[1] = 0.0;
+    last_out[0] = 0.0;
+    last_out[1] = 0.0;
+
     // Initialize struct to hold notes.
     notes_pressed *notes = malloc(sizeof(notes_pressed));
     initialize_keys(notes);
 
+    printf("Sample rate %d\n", SAMPLE_RATE);
+
     // Initiate wave tables.
-    float *sqr_table = create_wavetable(TYPE_SQUARE, SAMPLE_RATE, 64);
-    float *saw_table = create_wavetable(TYPE_SAW, SAMPLE_RATE, 64);
-    float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE, 64);
+    float *sqr_table = create_wavetable(TYPE_SQUARE, SAMPLE_RATE, 128);
+    float *saw_table = create_wavetable(TYPE_SAW, SAMPLE_RATE, 128);
+    float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE, 128);
 
     // Initiate oscilators.
-    osc *osc1 = create_new_osc(saw_table, 0.125);
-    osc *osc2 = create_new_osc(sqr_table, 0.125);
+    osc *osc1 = create_new_osc(sqr_table, 0.5);
+    osc *osc2 = create_new_osc(saw_table, 1.0);
 
     // Create_envelope (release doesn't really do anything atm).
-    osc1->envelope = create_envelope(0.05, 0.2, 0.5, 0.3, SAMPLE_RATE);
-    osc2->envelope = create_envelope(0.05, 0.2, 0.5, 0.3, SAMPLE_RATE);
+    envelope *env1 = create_envelope(0, 0.5, 0.5, 0.3, SAMPLE_RATE);
+    osc1->envelope = env1;
+    osc2->envelope = env1;
 
     // Pack oscilators for transfer to callback function.
     osc_pack *oscillators = malloc(sizeof(osc_pack));
@@ -49,7 +63,7 @@ int main(void){
     // Start audio stream callback.
     PaStream *stream;
     Pa_Initialize();
-    Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, SAMPLE_RATE, 256, pa_callback, oscillators);
+    Pa_OpenDefaultStream(&stream, 0, 1, paFloat32, SAMPLE_RATE, 256, pa_callback, oscillators);
     Pa_StartStream( stream );
 
     // While running listen for keypresses.
@@ -80,9 +94,13 @@ static int pa_callback( const void *input, void *output, unsigned long frameCoun
     clear_osc(output, frameCount);
 
     if (data->notes->note1.code) {
-        add_osc(output, data->osc1, frameCount, SAMPLE_RATE, data->notes->note1.freq/2, &data->notes->note1);
-        add_osc(output, data->osc2, frameCount, SAMPLE_RATE, data->notes->note1.freq/4, &data->notes->note1);
+        add_osc(output, data->osc1, frameCount, SAMPLE_RATE, data->notes->note1.freq/2.0, &data->notes->note1);
+        add_osc(output, data->osc2, frameCount, SAMPLE_RATE, data->notes->note1.freq/2.0, &data->notes->note1);
     }
+
+    filter_coeff coeff = calculate_coefficients (200, SAMPLE_RATE, LOW_PASS, sqrt(2));
+    filter(output, frameCount, coeff, last_in, last_out);
+
     /**
     if (oscillators->notes->note2.code) {
         add_osc(output, oscillators->osc1, frameCount, SAMPLE_RATE, oscillators->notes->note2.freq);
