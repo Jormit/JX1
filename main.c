@@ -46,11 +46,11 @@ int main(void){
     float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE, 128);
 
     // Initiate oscilators.
-    osc *osc1 = create_new_osc(sqr_table, 0.5);
-    osc *osc2 = create_new_osc(saw_table, 1.0);
+    osc *osc1 = create_new_osc(sqr_table, 10.0);
+    osc *osc2 = create_new_osc(saw_table, 10.0);
 
     // Create_envelope (release doesn't really do anything atm).
-    envelope *env1 = create_envelope(0, 0.5, 0.5, 0.3, SAMPLE_RATE);
+    envelope *env1 = create_envelope(0.01, 0.4, 0.0, 0.3, SAMPLE_RATE);
     osc1->envelope = env1;
     osc2->envelope = env1;
 
@@ -92,13 +92,19 @@ static int pa_callback( const void *input, void *output, unsigned long frameCoun
     osc_pack *data = (osc_pack*)userData;
 
     clear_osc(output, frameCount);
+    float env_amp = data->osc1->envelope->sustain;
 
     if (data->notes->note1.code) {
-        add_osc(output, data->osc1, frameCount, SAMPLE_RATE, data->notes->note1.freq/2.0, &data->notes->note1);
-        add_osc(output, data->osc2, frameCount, SAMPLE_RATE, data->notes->note1.freq/2.0, &data->notes->note1);
+        add_osc(output, data->osc1, frameCount, SAMPLE_RATE, data->notes->note1.freq/4.0, &data->notes->note1);
+        add_osc(output, data->osc2, frameCount, SAMPLE_RATE, data->notes->note1.freq/4.0, &data->notes->note1);
+        if (data->notes->note1.time < data->osc1->envelope->attack + data->osc1->envelope->decay){
+            env_amp = data->osc1->envelope->envelope_table[(int)(data->notes->note1.time * SAMPLE_RATE)];
+        } else {
+
+        }
     }
 
-    filter_coeff coeff = calculate_coefficients (200, SAMPLE_RATE, LOW_PASS, sqrt(2));
+    filter_coeff coeff = calculate_coefficients (env_amp*env_amp * 5000, SAMPLE_RATE, LOW_PASS, sqrt(2));
     filter(output, frameCount, coeff, last_in, last_out);
 
     /**
