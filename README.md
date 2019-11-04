@@ -3,3 +3,4 @@ An additive wavetable synthesiser written in c using the portaudio library. At t
 
 ## Todo
 - Cleanup.
+- Portmidi support.
