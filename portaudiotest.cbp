@@ -14,14 +14,35 @@
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add library="lib/.libs/libportaudio.dll.a" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="envelope.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="filters.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="filters.h" />
+		<Unit filename="keys.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="osc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="osc.h" />
+		<Unit filename="wavetables.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wavetables.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

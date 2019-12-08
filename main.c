@@ -46,11 +46,11 @@ int main(void){
     float *sin_table = create_wavetable(TYPE_SINE, SAMPLE_RATE, 128);
 
     // Initiate oscilators.
-    osc *osc1 = create_new_osc(sqr_table, 10.0);
-    osc *osc2 = create_new_osc(saw_table, 10.0);
+    osc *osc1 = create_new_osc(sqr_table, 0.5);
+    osc *osc2 = create_new_osc(saw_table, 0.5);
 
     // Create_envelope (release doesn't really do anything atm).
-    envelope *env1 = create_envelope(0.01, 0.4, 0.0, 0.3, SAMPLE_RATE);
+    envelope *env1 = create_envelope(0.05, 0.4, 0.5, 0.3, SAMPLE_RATE);
     osc1->envelope = env1;
     osc2->envelope = env1;
 
@@ -104,7 +104,7 @@ static int pa_callback( const void *input, void *output, unsigned long frameCoun
         }
     }
 
-    filter_coeff coeff = calculate_coefficients (env_amp*env_amp * 5000, SAMPLE_RATE, LOW_PASS, sqrt(2));
+    filter_coeff coeff = calculate_coefficients (env_amp*env_amp * 2000, SAMPLE_RATE, LOW_PASS, sqrt(2));
     filter(output, frameCount, coeff, last_in, last_out);
 
     /**
