@@ -29,6 +29,7 @@ int main(void){
     INPUT_RECORD irInBuf[128];
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
 
+    // Required to keep buffers contigous for filter calculation.
     last_in[0] = 0.0;
     last_in[1] = 0.0;
     last_out[0] = 0.0;
@@ -37,7 +38,12 @@ int main(void){
     // Initialize struct to hold notes.
     notes_pressed *notes = malloc(sizeof(notes_pressed));
     initialize_keys(notes);
-
+    printf("     ____.       ____ \n");
+    printf("    |    |__  __/_   |\n");
+    printf("    |    \\  \\/  /|   |\n");
+    printf("/\\__|    |>    < |   |\n");
+    printf("\\________/__/\\_ \\|___|\n");
+    printf("               \\/     \n");
     printf("Sample rate %d\n", SAMPLE_RATE);
 
     // Initiate wave tables.
@@ -50,7 +56,7 @@ int main(void){
     osc *osc2 = create_new_osc(saw_table, 0.5);
 
     // Create_envelope (release doesn't really do anything atm).
-    envelope *env1 = create_envelope(0.05, 0.4, 0.5, 0.3, SAMPLE_RATE);
+    envelope *env1 = create_envelope(0.05, 0.4, 0.4, 0.3, SAMPLE_RATE);
     osc1->envelope = env1;
     osc2->envelope = env1;
 
@@ -106,18 +112,6 @@ static int pa_callback( const void *input, void *output, unsigned long frameCoun
 
     filter_coeff coeff = calculate_coefficients (env_amp*env_amp * 2000, SAMPLE_RATE, LOW_PASS, sqrt(2));
     filter(output, frameCount, coeff, last_in, last_out);
-
-    /**
-    if (oscillators->notes->note2.code) {
-        add_osc(output, oscillators->osc1, frameCount, SAMPLE_RATE, oscillators->notes->note2.freq);
-        add_osc(output, oscillators->osc2, frameCount, SAMPLE_RATE, oscillators->notes->note2.freq);
-    } if (oscillators->notes->note3.code) {
-        add_osc(output, oscillators->osc1, frameCount, SAMPLE_RATE, oscillators->notes->note3.freq);
-        add_osc(output, oscillators->osc2, frameCount, SAMPLE_RATE, oscillators->notes->note3.freq);
-    } if (oscillators->notes->note4.code) {
-        add_osc(output, oscillators->osc1, frameCount, SAMPLE_RATE, oscillators->notes->note4.freq);
-        add_osc(output, oscillators->osc2, frameCount, SAMPLE_RATE, oscillators->notes->note4.freq);
-    } **/
 
     return 0;
 }

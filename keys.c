@@ -49,19 +49,8 @@ char Key2Note(KEY_EVENT_RECORD ker) {
 /** Creates a clean notes struct **/
 VOID initialize_keys(notes_pressed *notes){
     notes->note1.code = 0;
-    notes->note2.code = 0;
-    notes->note3.code = 0;
-    notes->note3.code = 0;
-
     notes->note1.stage = 0.0;
-    notes->note2.stage = 0.0;
-    notes->note3.stage = 0.0;
-    notes->note3.stage = 0.0;
-
     notes->note1.time = 0.0;
-    notes->note2.time = 0.0;
-    notes->note3.time = 0.0;
-    notes->note3.time = 0.0;
 }
 
 /** Given a key event this will set the current notes accordingly. **/
@@ -79,32 +68,10 @@ VOID KeyEventProc(KEY_EVENT_RECORD ker, notes_pressed *notes) {
             notes->note1.time = 0.0;
             notes->note1.stage = 0;
         }
-
-        /**
-        if (notes->note1.code == 0) {
-            notes->note1.code = note;
-            notes->note1.freq = freq;
-        } else if (notes->note2.code == 0) {
-            notes->note2.code = note;
-            notes->note2.freq = freq;
-        } else if (notes->note3.code == 0) {
-            notes->note3.code = note;
-            notes->note3.freq = freq;
-        } else if (notes->note4.code == 0) {
-            notes->note4.freq = freq;
-            notes->note4.code = note;
-        }
-        **/
     } else { // Key release.
          if (notes->note1.code == note) {
             notes->note1.code = 0;
             notes->note1.stage = 3;
-        } /** else if (notes->note2.code == note) {
-            notes->note2.code = 0;
-        } else if (notes->note3.code == note) {
-            notes->note3.code = 0;
-        } else if (notes->note4.code == note) {
-            notes->note4.code = 0;
-        } */
+        }
     }
 }

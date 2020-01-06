@@ -12,9 +12,10 @@ osc *create_new_osc(float *wavetable, float mix) {
 void add_osc(float *buffer, osc *osc, unsigned long frameCount, int sample_rate, float freq, note *current_note) {
     unsigned int i;
     float env_amp = osc->envelope->sustain;
+    float time_inc = 1/(float)sample_rate;
 
     for (i=0; i < frameCount; i++){
-        current_note->time+=0.00002267573;
+        current_note->time+=time_inc;
         if (current_note->time < osc->envelope->attack + osc->envelope->decay){
             env_amp = osc->envelope->envelope_table[(int)(current_note->time * sample_rate)];
         }

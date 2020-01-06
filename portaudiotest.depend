@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1572850505 source:c:\users\jordan\desktop\test\portaudiotest\main.c
+1578290161 source:c:\users\jordan\desktop\test\portaudiotest\main.c
 	<stdio.h>
 	<math.h>
 	<string.h>
@@ -11,7 +11,7 @@
 
 1477794184 c:\users\jordan\desktop\test\portaudiotest\include\portaudio.h
 
-1572651549 source:c:\users\jordan\desktop\test\portaudiotest\osc.c
+1578290208 source:c:\users\jordan\desktop\test\portaudiotest\osc.c
 	"osc.h"
 	<malloc.h>
 
